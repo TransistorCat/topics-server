@@ -5,7 +5,7 @@ import "sync"
 type Post struct {
 	ID         int64  `json:id`
 	ParentID   int64  `json:parent_id`
-	Content    string `josn:content`
+	Content    string `json:content`
 	CreateTime int64  `json:create_time`
 }
 
@@ -24,3 +24,5 @@ func NewPostDaoInstance() *PostDao {
 func (*PostDao) QueryPostsByParentID(parentid int64) []*Post {
 	return postIndexMap[parentid]
 }
+
+// func (*PostDao)

@@ -1,12 +1,16 @@
 package repository
 
-import "sync"
+import (
+	"encoding/json"
+	"os"
+	"sync"
+)
 
 type Topic struct {
-	ID         int64  `json:id`
-	Title      string `json:title`
-	Content    string `josn:content`
-	CreateTime int64  `json:create_time`
+	ID         int64  `json:"id"`
+	Title      string `json:"title"`
+	Content    string `json:"content"`
+	CreateTime int64  `json:"create_time"`
 }
 type TopicDao struct {
 }
@@ -25,4 +29,23 @@ func NewTopicDaoInstance() *TopicDao {
 }
 func (*TopicDao) QueryTopicByID(id int64) *Topic {
 	return topicIndexMap[id]
+}
+
+func (*TopicDao) InsertTopic(topic *Topic) error {
+	f, err := os.OpenFile("./data/topic", os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0600)
+	if err != nil {
+		return err
+	}
+
+	defer f.Close()
+	marshal, _ := json.Marshal(topic)
+	if _, err = f.WriteString(string(marshal) + "\n"); err != nil {
+		return err
+	}
+
+	rwMutex.Lock()
+	topicIndexMap[topic.ID] = topic
+
+	rwMutex.Unlock()
+	return nil
 }

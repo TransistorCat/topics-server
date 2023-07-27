@@ -18,6 +18,12 @@ func main() {
 		data := cotroller.QueryPageInfo(topicId)
 		c.JSON(200, data)
 	})
+	r.POST("/community/page/post/topic", func(ctx *gin.Context) {
+		title, _ := ctx.GetPostForm("title")
+		content, _ := ctx.GetPostForm("content")
+		data := cotroller.PublishTopic(title, content)
+		ctx.JSON(200, data)
+	})
 	err := r.Run()
 	if err != nil {
 		return

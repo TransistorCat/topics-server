@@ -2,7 +2,10 @@ module github.com/TransistorCat/topics-server
 
 go 1.19
 
-require github.com/gin-gonic/gin v1.9.1
+require (
+	github.com/gin-gonic/gin v1.9.1
+	github.com/gitstliu/go-id-worker v0.0.0-20190725025543-5a5fe074e612
+)
 
 require (
 	github.com/bytedance/sonic v1.9.1 // indirect
