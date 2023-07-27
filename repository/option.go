@@ -13,6 +13,6 @@ const (
 )
 
 var DefaultOptions = Options{
-	DBType:   1,
+	DBType:   2,
 	FilePath: "./data/",
 }
