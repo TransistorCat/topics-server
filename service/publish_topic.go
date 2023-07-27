@@ -9,11 +9,11 @@ import (
 	idworker "github.com/gitstliu/go-id-worker"
 )
 
-var idGen *idworker.IdWorker
+var topicIDGen *idworker.IdWorker
 
 func init() {
-	idGen = &idworker.IdWorker{}
-	idGen.InitIdWorker(1, 1)
+	topicIDGen = &idworker.IdWorker{}
+	topicIDGen.InitIdWorker(1, 1)
 }
 
 // PublishTopic 用于发布帖子的函数。
@@ -69,7 +69,7 @@ func (f *PublishTopicFlow) publish() error {
 		CreateTime: time.Now().Unix(),
 	}
 	// 生成唯一的帖子ID
-	id, err := idGen.NextId()
+	id, err := topicIDGen.NextId()
 	if err != nil {
 		return err
 	}
