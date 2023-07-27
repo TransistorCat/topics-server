@@ -12,6 +12,11 @@ type Topic struct {
 	Content    string `json:"content"`
 	CreateTime int64  `json:"create_time"`
 }
+
+func (Topic) TableName() string {
+	return "topic"
+}
+
 type TopicDao struct {
 }
 
@@ -31,7 +36,7 @@ func (*TopicDao) QueryTopicByID(id int64) *Topic {
 	return topicIndexMap[id]
 }
 
-func (*TopicDao) InsertTopic(topic *Topic) error {
+func (*TopicDao) InsertTopic2Local(topic *Topic) error {
 	f, err := os.OpenFile("./data/topic", os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0600)
 	if err != nil {
 		return err
@@ -40,6 +45,17 @@ func (*TopicDao) InsertTopic(topic *Topic) error {
 	defer f.Close()
 	marshal, _ := json.Marshal(topic)
 	if _, err = f.WriteString(string(marshal) + "\n"); err != nil {
+		return err
+	}
+
+	rwMutex.Lock()
+	topicIndexMap[topic.ID] = topic
+
+	rwMutex.Unlock()
+	return nil
+}
+func (*TopicDao) InsertTopic2MySQL(topic *Topic) error {
+	if err := DB.Create(topic).Error; err != nil {
 		return err
 	}
 

@@ -65,7 +65,7 @@ func (f *PublishPostFlow) publish() error {
 	}
 
 	post.ID = id
-	if err := repository.NewPostDaoInstance().InsertPost(post); err != nil {
+	if err := repository.NewPostDaoInstance().InsertPost2MySQL(post); err != nil {
 		return err
 	}
 	f.postID = post.ID

@@ -10,7 +10,7 @@ import (
 )
 
 func main() {
-	if err := Init("./data/"); err != nil {
+	if err := Init(repository.DefaultOptions); err != nil {
 		os.Exit(-1)
 	}
 	r := gin.Default()
@@ -38,8 +38,8 @@ func main() {
 	}
 }
 
-func Init(filePath string) error {
-	if err := repository.Init(filePath); err != nil {
+func Init(options repository.Options) error {
+	if err := repository.Init(options); err != nil {
 		return err
 	}
 	return nil

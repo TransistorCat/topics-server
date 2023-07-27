@@ -75,7 +75,7 @@ func (f *PublishTopicFlow) publish() error {
 	}
 	topic.ID = id
 	// 将帖子插入数据库
-	if err := repository.NewTopicDaoInstance().InsertTopic(topic); err != nil {
+	if err := repository.NewTopicDaoInstance().InsertTopic2MySQL(topic); err != nil {
 		return err
 	}
 	f.topicID = topic.ID
