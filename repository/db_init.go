@@ -9,7 +9,7 @@ func Init(options Options) error {
 
 	switch options.DBType {
 	case 1:
-		localfile.Init()
+		localfile.Init(&localfile.Default)
 	case 2:
 		mysql.Init()
 	}

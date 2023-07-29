@@ -5,11 +5,12 @@ import (
 	"sync"
 
 	"github.com/TransistorCat/topics-server/repository"
+	. "github.com/TransistorCat/topics-server/repository/common"
 )
 
 type PageInfo struct {
-	Topic    *repository.Topic
-	PostList []*repository.Post
+	Topic    *Topic
+	PostList []*Post
 }
 
 // 通过主题ID来获取页面的信息
@@ -28,8 +29,8 @@ type QueryPageInfoFlow struct {
 	topicID  int64
 	pageInfo *PageInfo //目标
 
-	topic *repository.Topic
-	posts []*repository.Post
+	topic *Topic
+	posts []*Post
 }
 
 func (f *QueryPageInfoFlow) Do() (*PageInfo, error) {
@@ -58,13 +59,13 @@ func (f *QueryPageInfoFlow) prepareInfo() error {
 	wg.Add(2)
 	go func() {
 		defer wg.Done()
-		topic := repository.NewTopicDaoInstance().QueryTopicByID(f.topicID)
+		topic := repository.NewTopicDaoInstance(repository.DefaultOptions.DBType).QueryByID(f.topicID)
 		f.topic = topic
 	}()
 	//获取post列表
 	go func() {
 		defer wg.Done()
-		posts := repository.NewPostDaoInstance().QueryPostsByParentID(f.topicID)
+		posts := repository.NewPostDaoInstance(repository.DefaultOptions.DBType).QueryByParentID(f.topicID)
 		f.posts = posts
 	}()
 	wg.Wait()

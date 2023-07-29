@@ -1,18 +1,21 @@
 package mysql
 
-import "github.com/TransistorCat/topics-server/repository"
+import . "github.com/TransistorCat/topics-server/repository/common"
 
 type TopicDao struct{}
 
 var topicDao *TopicDao
 
-func (*TopicDao) QueryTopicByID(id int64) *repository.Topic {
-	var topic repository.Topic
+func NewTopicDao() *TopicDao {
+	return &TopicDao{}
+}
+func (*TopicDao) QueryByID(id int64) *Topic {
+	var topic Topic
 	DB.Where("id=?", id).Find(&topic)
 	return &topic
 }
 
-func (*TopicDao) InsertTopic(topic *repository.Topic) error {
+func (*TopicDao) Insert(topic *Topic) error {
 	if err := DB.Create(topic).Error; err != nil {
 		return err
 	}

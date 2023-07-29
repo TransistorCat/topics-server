@@ -1,6 +1,6 @@
 package mysql
 
-import "github.com/TransistorCat/topics-server/repository"
+import . "github.com/TransistorCat/topics-server/repository/common"
 
 type PostDao struct{}
 
@@ -8,13 +8,17 @@ var (
 	postdao *PostDao
 )
 
-func (*PostDao) QueryPostsByParentID(parentid int64) []*repository.Post {
-	var posts []*repository.Post
+func NewPostDao() *PostDao {
+	return &PostDao{}
+}
+
+func (*PostDao) QueryByParentID(parentid int64) []*Post {
+	var posts []*Post
 	DB.Where("parent_id=?", parentid).Find(&posts)
 	return posts
 }
 
-func (*PostDao) InsertPost(post *repository.Post) error {
+func (*PostDao) Insert(post *Post) error {
 	if err := DB.Create(post).Error; err != nil {
 		return err
 	}

@@ -6,6 +6,7 @@ import (
 	"unicode/utf16"
 
 	"github.com/TransistorCat/topics-server/repository"
+	. "github.com/TransistorCat/topics-server/repository/common"
 	idworker "github.com/gitstliu/go-id-worker"
 )
 
@@ -63,7 +64,7 @@ func (f *PublishTopicFlow) checkParam() error {
 // publish 发布帖子，将帖子内容保存到数据库中。
 func (f *PublishTopicFlow) publish() error {
 	// 创建待发布的帖子对象
-	topic := &repository.Topic{
+	topic := &Topic{
 		Title:      f.title,
 		Content:    f.content,
 		CreateTime: time.Now().Unix(),
@@ -75,7 +76,7 @@ func (f *PublishTopicFlow) publish() error {
 	}
 	topic.ID = id
 	// 将帖子插入数据库
-	if err := repository.NewTopicDaoInstance().InsertTopic2MySQL(topic); err != nil {
+	if err := repository.NewTopicDaoInstance(repository.DefaultOptions.DBType).Insert(topic); err != nil {
 		return err
 	}
 	f.topicID = topic.ID

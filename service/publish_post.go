@@ -6,6 +6,7 @@ import (
 	"unicode/utf16"
 
 	"github.com/TransistorCat/topics-server/repository"
+	. "github.com/TransistorCat/topics-server/repository/common"
 	idworker "github.com/gitstliu/go-id-worker"
 )
 
@@ -54,7 +55,7 @@ func (f *PublishPostFlow) checkParam() error {
 }
 
 func (f *PublishPostFlow) publish() error {
-	post := &repository.Post{
+	post := &Post{
 		ParentID:   f.parentID,
 		Content:    f.content,
 		CreateTime: time.Now().Unix(),
@@ -65,7 +66,7 @@ func (f *PublishPostFlow) publish() error {
 	}
 
 	post.ID = id
-	if err := repository.NewPostDaoInstance().InsertPost2MySQL(post); err != nil {
+	if err := repository.NewPostDaoInstance(repository.DefaultOptions.DBType).Insert(post); err != nil {
 		return err
 	}
 	f.postID = post.ID

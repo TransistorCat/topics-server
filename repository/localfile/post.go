@@ -3,23 +3,21 @@ package localfile
 import (
 	"encoding/json"
 	"os"
-	"sync"
 
-	"github.com/TransistorCat/topics-server/repository"
+	. "github.com/TransistorCat/topics-server/repository/common"
 )
 
 type PostDao struct{}
 
-var (
-	postdao  *PostDao
-	postOnce sync.Once
-)
+func NewPostDao() *PostDao {
+	return &PostDao{}
+}
 
-func (*PostDao) QueryPostsByParentID(parentid int64) []*repository.Post {
+func (*PostDao) QueryByParentID(parentid int64) []*Post {
 	return postIndexMap[parentid]
 }
 
-func (*PostDao) InsertPost(post *repository.Post) error {
+func (*PostDao) Insert(post *Post) error {
 	f, err := os.OpenFile("./data/post", os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0600)
 	if err != nil {
 		return err
@@ -32,7 +30,7 @@ func (*PostDao) InsertPost(post *repository.Post) error {
 	rwMutex.Lock()
 	postList, ok := postIndexMap[post.ParentID]
 	if !ok {
-		postIndexMap[post.ParentID] = []*repository.Post{post}
+		postIndexMap[post.ParentID] = []*Post{post}
 	} else {
 		postList = append(postList, post)
 		postIndexMap[post.ParentID] = postList

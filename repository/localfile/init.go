@@ -6,12 +6,12 @@ import (
 	"os"
 	"sync"
 
-	"github.com/TransistorCat/topics-server/repository"
+	. "github.com/TransistorCat/topics-server/repository/common"
 )
 
 var (
-	topicIndexMap map[int64]*repository.Topic
-	postIndexMap  map[int64][]*repository.Post
+	topicIndexMap map[int64]*Topic
+	postIndexMap  map[int64][]*Post
 	rwMutex       sync.RWMutex
 )
 
@@ -19,7 +19,7 @@ type localFile struct {
 	filePath string
 }
 
-var DefaultLocalFile = localFile{filePath: "./data/"}
+var Default = localFile{filePath: "./data/"}
 
 func Init(f *localFile) error {
 
@@ -37,10 +37,10 @@ func (f *localFile) initTopicIndexMap() error {
 		return err
 	}
 	scanner := bufio.NewScanner(open)
-	topicTmpMap := make(map[int64]*repository.Topic)
+	topicTmpMap := make(map[int64]*Topic)
 	for scanner.Scan() {
 		text := scanner.Text()
-		var topic repository.Topic
+		var topic Topic
 		if err := json.Unmarshal([]byte(text), &topic); err != nil {
 			return err
 		}
@@ -56,16 +56,16 @@ func (f *localFile) initPostIndexMap() error {
 		return err
 	}
 	scanner := bufio.NewScanner(open)
-	postTmpMap := make(map[int64][]*repository.Post)
+	postTmpMap := make(map[int64][]*Post)
 	for scanner.Scan() {
 		text := scanner.Text()
-		var post repository.Post
+		var post Post
 		if err := json.Unmarshal([]byte(text), &post); err != nil {
 			return err
 		}
 		posts, ok := postTmpMap[post.ParentID]
 		if !ok { //不存在就新建
-			postTmpMap[post.ParentID] = []*repository.Post{&post}
+			postTmpMap[post.ParentID] = []*Post{&post}
 			continue
 		}
 		posts = append(posts, &post)

@@ -3,24 +3,20 @@ package localfile
 import (
 	"encoding/json"
 	"os"
-	"sync"
 
-	"github.com/TransistorCat/topics-server/repository"
+	. "github.com/TransistorCat/topics-server/repository/common"
 )
 
-type TopicDao struct {
+type TopicDao struct{}
+
+func NewTopicDao() *TopicDao {
+	return &TopicDao{}
 }
-
-var (
-	topicDao  *TopicDao
-	topicOnce sync.Once
-)
-
-func (*TopicDao) QueryTopicByID(id int64) *repository.Topic {
+func (*TopicDao) QueryByID(id int64) *Topic {
 	return topicIndexMap[id]
 }
 
-func (*TopicDao) InsertTopic2Local(topic *repository.Topic) error {
+func (*TopicDao) Insert(topic *Topic) error {
 	f, err := os.OpenFile("./data/topic", os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0600)
 	if err != nil {
 		return err
