@@ -10,6 +10,7 @@ import (
 )
 
 func main() {
+
 	if err := Init(repository.DefaultOptions); err != nil {
 		os.Exit(-1)
 	}
