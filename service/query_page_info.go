@@ -59,7 +59,12 @@ func (f *QueryPageInfoFlow) prepareInfo() error {
 	wg.Add(2)
 	go func() {
 		defer wg.Done()
+		if topic := repository.QueryTopicCache(f.topicID); topic != nil {
+			f.topic = topic
+			return
+		}
 		topic := repository.NewTopicDaoInstance(repository.DefaultOptions.DBType).QueryByID(f.topicID)
+		repository.AppendTopicCache(*topic)
 		f.topic = topic
 	}()
 	//获取post列表

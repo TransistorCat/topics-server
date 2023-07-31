@@ -13,5 +13,6 @@ func Init(options Options) error {
 	case 2:
 		mysql.Init()
 	}
+	redisInit()
 	return nil
 }
