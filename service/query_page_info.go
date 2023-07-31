@@ -70,7 +70,12 @@ func (f *QueryPageInfoFlow) prepareInfo() error {
 	//获取post列表
 	go func() {
 		defer wg.Done()
+		if posts := repository.QuerypostCache(f.topicID); posts != nil {
+			f.posts = posts
+			return
+		}
 		posts := repository.NewPostDaoInstance(repository.DefaultOptions.DBType).QueryByParentID(f.topicID)
+		repository.AppendpostCache(posts)
 		f.posts = posts
 	}()
 	wg.Wait()

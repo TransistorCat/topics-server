@@ -46,3 +46,28 @@ func AppendTopicCache(topic Topic) {
 	}
 	fmt.Println(keys)
 }
+
+func QuerypostCache(parentID int64) []*Post {
+	if isExist, _ := rdb.Exists(ctx, "post"+fmt.Sprint(parentID)).Result(); isExist == 0 {
+		return nil
+	}
+	var post []*Post
+	// post = make([]*Post, 64)
+	err := rdb.HVals(ctx, "post"+fmt.Sprint(parentID)).ScanSlice(&post)
+	if err != nil {
+		panic(err)
+	}
+
+	return post
+}
+
+func AppendpostCache(post []*Post) {
+	for i := 0; i < len(post); i++ {
+		keys, err := rdb.HSet(ctx, "post"+fmt.Sprint(post[i].ParentID), post[i].ID, &post[i]).Result()
+		if err != nil {
+			panic(err)
+		}
+		fmt.Println(keys)
+	}
+
+}

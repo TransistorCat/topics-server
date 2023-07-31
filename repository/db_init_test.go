@@ -1,6 +1,8 @@
 package repository
 
 // import (
+// 	"testing"
+
 // 	. "github.com/TransistorCat/topics-server/repository/common"
 // )
 
@@ -18,8 +20,8 @@ package repository
 // }
 
 // func TestCache(t *testing.T) {
-// 	testTopic := Topic{ID: 111, Content: "你ihao"}
+// 	testTopic := Post{ID: 111, ParentID: 1, Content: "你ihao"}
 // 	redisInit()
-// 	QueryCache(111)
-// 	AppendCache(testTopic)
+// 	QuerypostCache(1)
+// 	AppendpostCache()
 // }
