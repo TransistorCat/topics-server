@@ -13,6 +13,8 @@ type PageInfo struct {
 	PostList []*Post
 }
 
+var needUpdate bool
+
 // 通过主题ID来获取页面的信息
 func QueryPageInfo(topicID int64) (*PageInfo, error) {
 	return NewQueryPageInfoFlow(topicID).Do()

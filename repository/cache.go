@@ -63,7 +63,7 @@ func QuerypostCache(parentID int64) []*Post {
 
 func AppendpostCache(post []*Post) {
 	for i := 0; i < len(post); i++ {
-		keys, err := rdb.HSet(ctx, "post"+fmt.Sprint(post[i].ParentID), post[i].ID, &post[i]).Result()
+		keys, err := rdb.HSet(ctx, "post"+fmt.Sprint(post[i].ParentID), post[i].ID, post[i]).Result()
 		if err != nil {
 			panic(err)
 		}
